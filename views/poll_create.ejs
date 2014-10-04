@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Create Poll</title>
+    <script src="/socket.io/socket.io.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script>
+      $(document).ready(function(){
+        // client connect to server socket
+        io = io.connect();
+        // when client click on button_create_poll
+        $(document).on('click', '#button_create_poll', function(){
+          question = $('#poll_question').val();
+          option1 = $('#option1').val();
+          option2 = $('#option2').val();
+          option3 = $('#option3').val();
+          option4 = $('#option4').val();
+          // create object with all poll data
+          poll = {id: null, created_by: null, question: question, option1: {text: option1, votes: 0}, option2: {text: option2, votes: 0}, option3: {text: option3, votes: 0}, option4: {text: option4, votes: 0}};
+          io.emit('user_created_poll', {poll: poll});
+          // when client listen to goto_this_poll
+          io.on('goto_this_poll', function(data){
+          	// redirect user to the specific poll page
+          	window.location.assign("/poll/" + data.this_poll);
+          });
+        });
+      });
+    </script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+  	<p class="right"><a href="/logout">Logout</a></p>
+  	<p class="right"><a href="/poll">Cancel</a></p>
+  	<h2>Put the question and options here:</h2>
+  	<p><label>Question: <input type="text" id="poll_question"></label></p>
+  	<p><label>Option 1: <input type="text" id="option1"></label></p>
+  	<p><label>Option 2: <input type="text" id="option2"></label></p>
+  	<p><label>Option 3: <input type="text" id="option3"></label></p>
+  	<p><label>Option 4: <input type="text" id="option4"></label></p>
+  	<button id="button_create_poll">Create Poll</button>
+  </body>
+</html>

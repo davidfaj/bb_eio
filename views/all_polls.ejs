@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>List Polls</title>
+    <script src="/socket.io/socket.io.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script>
+      $(document).ready(function(){
+        // client connect to server socket
+        io = io.connect();
+        // when client listen to new_poll
+	    io.on('new_poll', function(data){
+	      // load new poll title and link in page
+	      $('.all_polls').append('<p><label>' + data.poll.created_by + ': <a href="/poll/' + data.poll.id + '">' + data.poll.question + '</a></label></p>');
+	    });
+      });
+    </script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+  	<p class="right"><a href="/logout">Logout</a></p>
+  	<p class="right"><a href="/poll/create">Create a New Poll</a></p>
+  	<h1>Current polls:</h1>
+  	<div class="all_polls">
+  	<% for (i = 0; i < polls.length; i++) { %>
+  		<p><label><%= polls[i].created_by %>: <a href="/poll/<%= polls[i].id %>"><%= polls[i].question %></a></label></p>
+  	<% } %>
+  </div><!-- end of all_polls div -->
+  </body>
+</html>

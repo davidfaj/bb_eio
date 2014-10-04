@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Survey Poll</title>
+    <script src="/socket.io/socket.io.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script>
+      $(document).ready(function(){
+        // client connect to server socket
+        io = io.connect();
+        this_poll = <%= poll.id %>;
+        // when user click on option1 vote button
+        $(document).on('click', '#vote_poll_' + this_poll + '_option1', function(){
+        	vote = {poll: this_poll, option: 1};
+        	io.emit('user_voted', {vote: vote});
+        });
+        // when user click on option2 vote button
+        $(document).on('click', '#vote_poll_' + this_poll + '_option2', function(){
+        	vote = {poll: this_poll, option: 2};
+        	io.emit('user_voted', {vote: vote});
+        });
+        // when user click on option3 vote button
+        $(document).on('click', '#vote_poll_' + this_poll + '_option3', function(){
+        	vote = {poll: this_poll, option: 3};
+        	io.emit('user_voted', {vote: vote});
+        });
+        // when user click on option4 vote button
+        $(document).on('click', '#vote_poll_' + this_poll + '_option4', function(){
+        	vote = {poll: this_poll, option: 4};
+        	io.emit('user_voted', {vote: vote});
+        });
+        // when user listen to new_vote
+        io.on('new_vote', function(data){
+        	// if user is in the same poll page, load the new votes
+        	if (data.poll.id == this_poll) {
+        		$('#votes_poll_' + this_poll + '_option1').text(data.poll.option1.votes);
+        		$('#votes_poll_' + this_poll + '_option2').text(data.poll.option2.votes);
+        		$('#votes_poll_' + this_poll + '_option3').text(data.poll.option3.votes);
+        		$('#votes_poll_' + this_poll + '_option4').text(data.poll.option4.votes);
+        	}
+        });
+      });
+    </script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+  	<p class="right"><a href="/logout">Logout</a></p>
+  	<p class="right"><a href="/poll">Go to Polls</a></p>
+  	<h2><%= poll.question %></h2>
+  	<p>Click the Vote button to choose one.</p>
+  	<table>
+  		<thead>
+  			<tr>
+  				<th>Option</th>
+  				<th>Current Count of Votes</th>
+  				<th>Action</th>
+  			</tr>
+  		</thead>
+  		<tbody class="poll_table">
+  			<tr>
+  				<td><%= poll.option1.text %></td>
+  				<td id="votes_poll_<%= poll.id %>_option1"><%= poll.option1.votes %></td>
+  				<td><button id="vote_poll_<%= poll.id %>_option1">Vote</button></td>
+  			</tr>
+  			<tr>
+  				<td><%= poll.option2.text %></td>
+  				<td id="votes_poll_<%= poll.id %>_option2"><%= poll.option2.votes %></td>
+  				<td><button id="vote_poll_<%= poll.id %>_option2">Vote</button></td>
+  			</tr>
+  			<tr>
+  				<td><%= poll.option3.text %></td>
+  				<td id="votes_poll_<%= poll.id %>_option3"><%= poll.option3.votes %></td>
+  				<td><button id="vote_poll_<%= poll.id %>_option3">Vote</button></td>
+  			</tr>
+  			<tr>
+  				<td><%= poll.option4.text %></td>
+  				<td id="votes_poll_<%= poll.id %>_option4"><%= poll.option4.votes %></td>
+  				<td><button id="vote_poll_<%= poll.id %>_option4">Vote</button></td>
+  			</tr>
+  		</tbody>
+  	</table>
+  </body>
+</html>

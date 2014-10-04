@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Login</title>
+    <script src="/socket.io/socket.io.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script>
+      $(document).ready(function(){
+        // client connect to server socket
+        io = io.connect();
+        // when user clicks "Login"
+        $(document).on('click', '#button_login', function(){
+          user_name = $('#user_name').val();
+          io.emit('click_login', {user_name: user_name});
+        });
+        // when client listen to goto_all_polls
+        io.on('goto_all_polls', function(data){
+          window.location.assign("/poll");
+        });
+      });
+    </script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+	<label>Your Name: <input type="text" id="user_name"></label>
+	<button id="button_login">Login</button>
+  </body>
+</html>
